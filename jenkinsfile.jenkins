@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('build') {
+            steps {
+                script {
+                    sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirments.txt
+                    '''
+                }
+            }
+        }
+        
+        stage ('Test'){
+            steps {
+                sh '''
+                . venv/bin/activate
+                pytest tests/db_test.py
+                '''
+            }
+        }
+    }
+}
