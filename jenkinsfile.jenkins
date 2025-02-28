@@ -3,6 +3,9 @@ pipeline {
     stages {
         stage('build') {
             steps {
+
+                echo 'Gathering requirements'
+
                 script {
                     sh '''
                     python3 -m venv venv
@@ -15,6 +18,9 @@ pipeline {
         
         stage ('Test'){
             steps {
+
+                echo 'Running Tests'
+
                 sh '''
                 . venv/bin/activate
                 pytest tests/db_test.py
