@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SECONDARY_REPO = 'https://github.com/hacker-dude/trigger-repo'
-        CREDENTIALS_ID = 'Github PAT'
+        CREDENTIALS_ID = 'GitHub PAT'
     }
 
     stages {
