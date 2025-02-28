@@ -3,6 +3,9 @@ pipeline {
     stages {
         stage('build') {
             steps {
+
+                echo 'Gathering requirements'
+
                 script {
                     sh '''
                     python3 -m venv venv
@@ -13,12 +16,43 @@ pipeline {
             }
         }
         
-        stage ('Test'){
+        stage('Test') {
             steps {
+
+                echo 'Running Tests'
+
                 sh '''
                 . venv/bin/activate
                 pytest tests/db_test.py
                 '''
+            }
+        }
+
+        stage('Deploy to Main') {
+            when {
+                branch 'feature_*'
+            }
+            steps {
+                echo "Deploying changes from feature branch to main branch..."
+                script {
+                    withCredentials([string(credentialsId: 'GitHub PAT', variable: 'GITHUB_TOKEN')]) {
+                        sh '''
+                        git config --global user.email "your-email@example.com"
+                        git config --global user.name "Daviti Bekurishvili"
+                        
+                        # Set up Git to use the PAT for authentication
+                        git config --global credential.helper '!f() { echo "username=your-github-username;password=$GITHUB_TOKEN"; }; f'
+                        
+                        # Clone, merge and push as before
+                        git clone https://github.com/hacker-dude/trigger-repo
+                        cd repo
+                        git checkout main
+                        git pull
+                        git merge origin/${BRANCH_NAME} --no-ff -m "Merging ${BRANCH_NAME} into main"
+                        git push
+                        '''
+                    }
+                }
             }
         }
     }
