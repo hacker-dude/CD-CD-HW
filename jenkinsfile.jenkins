@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    enviroment{
+        GIT_CREDENTIALS_ID = 'GitHub PAT'
+    }
+
     stages {
         stage('build') {
             steps {
@@ -25,6 +30,27 @@ pipeline {
                 . venv/bin/activate
                 pytest tests/db_test.py
                 '''
+            }
+        }
+
+        stage('Merge Dev to Main') {
+            when {
+                expression { return currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: GIT_CREDENTIALS_ID, variable: 'GIT_PAT')]) {
+                        sh '''
+                        git config --global user.name "Jenkins"
+                        git config --global user.email "jenkins@example.com"
+                        git remote set-url origin https://$GIT_PAT@github.com/your-org/your-repo.git
+                        git checkout main
+                        git pull origin main
+                        git merge --no-ff dev -m "Merge dev into main [Jenkins]"
+                        git push origin main
+                        '''
+                    }
+                }
             }
         }
     }
