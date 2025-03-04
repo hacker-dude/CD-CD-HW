@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment{
-        GIT_CREDENTIALS_ID = 'GitHub PAT'
+        GIT_CREDENTIALS_ID = '74f5d2eb-8ebb-4bac-8786-eab3b9dac656'
     }
 
     stages {
