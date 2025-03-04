@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    enviroment{
-        GIT_CREDENTIALS_ID = 'GitHub PAT'
+    environment{
+        GIT_CREDENTIALS_ID = '74f5d2eb-8ebb-4bac-8786-eab3b9dac656'
     }
 
     stages {
@@ -43,10 +43,10 @@ pipeline {
                         sh '''
                         git config --global user.name "Jenkins"
                         git config --global user.email "jenkins@example.com"
-                        git remote set-url origin https://$GIT_PAT@github.com/your-org/your-repo.git
+                        git remote set-url origin https://$GIT_PAT@github.com/hacker-dude/CD-CD-HW.git
                         git checkout main
                         git pull origin main
-                        git merge --no-ff dev -m "Merge dev into main [Jenkins]"
+                        git merge --no-ff origin dev -m "Merge dev into main [Jenkins]"
                         git push origin main
                         '''
                     }
